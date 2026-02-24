@@ -1,63 +1,186 @@
-# Libs
+# @dangmixx/libs
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+Lightweight and reusable state utilities for Angular applications ---
+built around a clean, type-safe **Loadable State pattern**.
 
-## Code scaffolding
+> Simplify async state management. Eliminate boolean chaos. Keep your
+> code predictable.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+------------------------------------------------------------------------
 
-```bash
-ng generate component component-name
+## ✨ Features
+
+-   Typed Loadable State pattern
+-   Minimal and framework-friendly
+-   Angular compatible
+-   RxJS friendly
+-   Tree-shakable
+-   ES2022 output
+-   Full TypeScript definitions included
+
+------------------------------------------------------------------------
+
+## 📦 Installation
+
+``` bash
+npm install @dangmixx/libs
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+or
 
-```bash
-ng generate --help
+``` bash
+yarn add @dangmixx/libs
 ```
 
-## Building
+------------------------------------------------------------------------
 
-To build the library, run:
+## 🎯 Why Loadable State?
 
-```bash
+Managing async UI state often becomes messy:
+
+``` ts
+isLoading = false;
+error: string | null = null;
+data: User[] = [];
+```
+
+With `LoadableState<T>`:
+
+``` ts
+state = createLoadableState<User[]>();
+```
+
+One state object. Fully typed. Predictable transitions.
+
+------------------------------------------------------------------------
+
+## 🚀 Quick Start
+
+### Create a loadable state
+
+``` ts
+import { createLoadableState } from '@dangmixx/libs';
+
+const state = createLoadableState<string>();
+```
+
+### Set loading
+
+``` ts
+state.loading();
+```
+
+### Set success
+
+``` ts
+state.success('Hello world');
+```
+
+### Set error
+
+``` ts
+state.error('Something went wrong');
+```
+
+------------------------------------------------------------------------
+
+## 🧠 Angular HTTP Example
+
+``` ts
+state = createLoadableState<User[]>();
+
+loadUsers() {
+  this.state.loading();
+
+  this.http.get<User[]>('/api/users').subscribe({
+    next: users => this.state.success(users),
+    error: err => this.state.error(err.message)
+  });
+}
+```
+
+Template:
+
+``` html
+<div *ngIf="state.isLoading()">Loading...</div>
+
+<div *ngIf="state.isError()">
+  Error: {{ state.error }}
+</div>
+
+<div *ngIf="state.isSuccess()">
+  <pre>{{ state.data | json }}</pre>
+</div>
+```
+
+------------------------------------------------------------------------
+
+## 🧱 API
+
+### createLoadableState`<T>`{=html}()
+
+Creates a new loadable state instance.
+
+### State Shape
+
+``` ts
+interface LoadableState<T> {
+  data: T | null;
+  error: unknown;
+  status: 'idle' | 'loading' | 'success' | 'error';
+}
+```
+
+### Available Methods
+
+-   `loading()` → set state to loading
+-   `success(data: T)` → set state to success
+-   `error(err: unknown)` → set state to error
+-   `reset()` → reset to idle
+-   `isLoading()` → boolean
+-   `isSuccess()` → boolean
+-   `isError()` → boolean
+
+------------------------------------------------------------------------
+
+## 🌲 Tree Shaking
+
+-   Built with ES2022
+-   Distributed as FESM2022
+-   Side-effect free
+
+Only what you import is included in your final bundle.
+
+------------------------------------------------------------------------
+
+## 🛠 Development
+
+``` bash
 ng build libs
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+Output:
 
-### Publishing the Library
+    dist/libs
 
-Once the project is built, you can publish your library by following these steps:
+------------------------------------------------------------------------
 
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/libs
-   ```
+## 📌 Versioning
 
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
+Semantic Versioning:
 
-## Running unit tests
+-   PATCH → bug fixes
+-   MINOR → new features
+-   MAJOR → breaking changes
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+------------------------------------------------------------------------
 
-```bash
-ng test
-```
+## 🐛 Issues
 
-## Running end-to-end tests
+https://github.com/dangmixx/angular-workspaces/issues
 
-For end-to-end (e2e) testing, run:
+------------------------------------------------------------------------
 
-```bash
-ng e2e
-```
+## 📄 License
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT © dangmixx

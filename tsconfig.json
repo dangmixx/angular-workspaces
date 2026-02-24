@@ -14,7 +14,7 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "paths": {
-      "@libs": ["libs/*"]
+      "@dangmixx/libs": ["libs/*"]
     },
     "importHelpers": true,
     "target": "ES2022",
